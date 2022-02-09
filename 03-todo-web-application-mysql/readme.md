@@ -75,6 +75,12 @@ private String desc;
 docker run --detach --env MYSQL_ROOT_PASSWORD=dummypassword --env MYSQL_USER=todos-user --env MYSQL_PASSWORD=dummytodos --env MYSQL_DATABASE=todos --name mysql --publish 3306:3306 mysql:5.7
 ```
 
+OR a shorter version:
+
+```
+docker run -d -e MYSQL_ROOT_PASSWORD=rootPass -e MYSQL_USER=gourab -e MYSQL_PASSWORD=password -e MYSQL_DATABASE=todos --name mysql -p 3306:3306 mysql:5.7.37
+```
+
 Using Custom Network
 
 ```
