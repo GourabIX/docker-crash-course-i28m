@@ -101,6 +101,19 @@ Using Link
 docker container run -p 8080:8080 --link=mysql -e RDS_HOSTNAME=mysql  in28min/todo-web-application-mysql:0.0.1-SNAPSHOT
 ```
 
+OR
+
+```
+docker container run -p <host_port>:<container_port> --link=<mysql_container_name> ENVVAR_RDS_HOSTNAME=<mysql_container_name> <repository>:<tag>
+```
+
+Accompanying `dataSourceUrl`:
+
+```
+# RDS_HOSTNAME is an environment variable with the default value of localhost.
+spring.datasource.url=jdbc:mysql://${RDS_HOSTNAME:localhost}:${RDS_PORT:3306}/${RDS_DB_NAME:todos}?useSSL=false
+```
+
 Using Custom Network
 
 ```
