@@ -15,8 +15,8 @@ RUN npm run build
 
 ## Stage 2 - Let's build a minimal image with the "deployable package"
 FROM nginx:1.12-alpine
-COPY --from=frontend-build ./build /usr/share/nginx/html
-# ./build because the production build would be created at /fullstack/frontend/build and /fullstack/frontend is the WORKDIR.
+COPY --from=frontend-build /fullstack/frontend/build /usr/share/nginx/html
+# ./build does not work here. Use /fullstack/frontend/build instead.
 # Anything inside /usr/share/nginx/html would get exposed when the NGINX web server is launched up. Kinda like webapps in Tomcat.
 
 EXPOSE 80
