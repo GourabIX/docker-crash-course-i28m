@@ -14,6 +14,7 @@ RUN mvn dependency:go-offline -B
 ### Step 1.2 - Copy source and build "deployable package"
 COPY src src
 RUN mvn clean install
+# Make sure the "target" folder is not sent to the Docker daemon as build context. "target/" is being built on line 16.
 
 ### Step 1.3- Unzip the JAR
 # jar -xf unzips the JAR into the current directory.
