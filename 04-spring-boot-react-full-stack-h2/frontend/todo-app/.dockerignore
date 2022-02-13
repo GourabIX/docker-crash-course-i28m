@@ -1,0 +1,3 @@
+# List of folders and files that should NOT be part of the Docker build context
+
+node_modules
