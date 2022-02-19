@@ -6,15 +6,17 @@ services:
 
   # The `todo-frontend` service specifies the details for the frontend container to be created.
   todo-frontend:
-    image: gourabix/fs-react-frontend:1.1    # An image with this repo:tag must exist locally.
-
     # If the image does not exist locally, it can be created using the `build` block.
-    # Either the `image` block or the `build` can be used. Both cannot be used simultaneously.
-    # build:
-      # location of source code relative to this docker-compose.yml file.
-      # context: frontend/todo-app
-      # location of Dockerfile inside the `context`.
-      # dockerfile: Dockerfile
+    # Either the `image` block or the `build` can be used.
+    # If `build` and `image` both are specified, then the image will be built and tagged with the `repo:tag` specified in the `image` block.
+    build:
+      # specify location of source code relative to this docker-compose.yml file.
+      context: frontend/todo-app
+      # specify name and location of Dockerfile inside the `context`.
+      dockerfile: Dockerfile
+
+    # An image with this repo:tag must exist locally.
+    image: gourabix/fs-react-frontend:1.1
     
     # Specify port mapping for publishing container
     ports:
@@ -35,6 +37,9 @@ services:
 
   # The `todo-rest-backend` service specifies the details for the backend container to be created.
   todo-rest-backend:
+    build:
+      context: restful-web-services
+      dockerfile: Dockerfile
     image: gourabix/fs-rest-backend:1.3
     ports:
       - "8080:8080"
