@@ -11,6 +11,7 @@ RUN mvn clean install
 # Stage 2 - create image
 FROM tomcat:9.0.58-jre8-openjdk
 RUN rm -rf /usr/local/tomcat/webapps/*
-COPY /todo-backend/target/*.war /usr/local/tomcat/webapps/ROOT.war
+ARG BUILD_PATH=/todo-backend/target
+COPY --from=backend-build ${BUILD_PATH}/*.war /usr/local/tomcat/webapps/ROOT.war
 EXPOSE 8080
 ENTRYPOINT ["catalina.sh", "run"]
