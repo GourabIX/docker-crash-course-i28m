@@ -1,0 +1,49 @@
+# Docker compose spec version - https://docs.docker.com/compose/compose-file/#compose-and-docker-compatibility-matrix
+version: '3.7'
+
+# Containers to be created and launched up as part of this composition (composition = Docker-compose file)
+services:
+
+  # The `todo-frontend` service specifies the details for the frontend container to be created.
+  todo-frontend:
+    image: gourabix/fs-react-frontend:1.1    # An image with this repo:tag must exist locally.
+
+    # If the image does not exist locally, it can be created using the `build` block.
+    # Either the `image` block or the `build` can be used. Both cannot be used simultaneously.
+    # build:
+      # location of source code relative to this docker-compose.yml file.
+      # context: frontend/todo-app
+      # location of Dockerfile inside the `context`.
+      # dockerfile: Dockerfile
+    
+    # Specify port mapping for publishing container
+    ports:
+      # Container port (internal) = 80, Host port (external) = 4200
+      - "4200:80"
+    
+    # Specify the restart policy
+    restart: "always"
+
+    # Specify the service to start up first.
+    # In this case, the `todo-rest-backend` service will be launched up first, followed by `todo-frontend`.
+    depends_on:
+      - todo-rest-backend
+
+    # Specify the networks to be associated with the `todo-frontend` service.
+    networks:
+      - fs-app-network
+
+  # The `todo-rest-backend` service specifies the details for the backend container to be created.
+  todo-rest-backend:
+    image: gourabix/fs-rest-backend:1.3
+    ports:
+      - "8080:8080"
+    restart: always
+    networks:
+      - fs-app-network
+
+# Network to be created to faciliate communication between containers
+networks:
+  # The name of the network to be created and it's specifications.
+  # This docker-compose file uses the default network attributes, so the specifications are empty.
+  fs-app-network:
