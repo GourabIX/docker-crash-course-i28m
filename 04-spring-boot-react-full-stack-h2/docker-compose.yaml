@@ -1,5 +1,5 @@
 # Docker compose spec version - https://docs.docker.com/compose/compose-file/#compose-and-docker-compatibility-matrix
-version: '3.7'
+version: "3.7"
 
 # Containers to be created and launched up as part of this composition (composition = Docker-compose file)
 services:
