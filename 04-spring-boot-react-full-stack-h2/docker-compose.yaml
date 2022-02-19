@@ -3,7 +3,6 @@ version: "3.7"
 
 # Containers to be created and launched up as part of this composition (composition = Docker-compose file)
 services:
-
   # The `todo-frontend` service specifies the details for the frontend container to be created.
   todo-frontend:
     # If the image does not exist locally, it can be created using the `build` block.
@@ -14,23 +13,18 @@ services:
       context: frontend/todo-app
       # specify name and location of Dockerfile inside the `context`.
       dockerfile: Dockerfile
-
     # An image with this repo:tag must exist locally, if `build` block is not specified.
     image: gourabix/fs-react-frontend:1.1
-    
     # Specify port mapping for publishing container
     ports:
       # Container port (internal) = 80, Host port (external) = 4200
       - "4200:80"
-    
     # Specify the restart policy
     restart: "always"
-
     # Specify the service to start up first.
     # In this case, the `todo-rest-backend` service will be launched up first, followed by `todo-frontend`.
     depends_on:
       - todo-rest-backend
-
     # Specify the networks to be associated with the `todo-frontend` service.
     networks:
       - fs-app-network
