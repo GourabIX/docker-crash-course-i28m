@@ -1,0 +1,45 @@
+version: "3.7"
+
+services:
+  todo-mysql-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: gourabix/todo-mysql-backend:1.1
+    ports:
+      - "8080:8080"
+    restart: "always"
+    depends_on:
+      - mysql
+    environment:
+      RDS_HOSTNAME: mysql     # Must be the name of the `mysql` service
+      RDS_PORT: 3306
+      RDS_DB_NAME: todos
+      RDS_USERNAME: gourab
+      RDS_PASSWORD: password
+    networks:
+      - todo-web-mysql-network
+
+  mysql:
+    image: mysql:5.7.37
+    ports:
+      - "3306:3306"
+    restart: "always"
+    # Specify the environment variables for this service.
+    # When launching up a container manually, this is done using the `--env` or `-e` option.
+    environment:
+      MYSQL_ROOT_PASSWORD: rootPass
+      MYSQL_USER: gourab
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: todos
+    volumes:
+      - mysql-db-data-volume:/var/lib/mysql
+    networks:
+      - todo-web-mysql-network
+
+# Specify volumes to preserve container data across container lifecycles.
+volumes:
+  mysql-db-data-volume:
+
+networks:
+  todo-web-mysql-network:
