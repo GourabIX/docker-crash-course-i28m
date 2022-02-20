@@ -1,9 +1,14 @@
+# Stage 1 - compile and build source
+FROM maven:3.8.4-openjdk-8 as backend-build
+WORKDIR /currency-exchange-service
+COPY pom.xml .
+RUN mvn dependency:go-offline -B
+COPY src src
+RUN mvn clean install
+
+# Stage 2 - create image
 FROM openjdk:8u322-jdk
 VOLUME /tmp
 EXPOSE 8000
-COPY target/*.jar app.jar
-# Configure memory limits and CPU usage quota for the JVM. Empty string means no limit.
-ENV JAVA_OPTS=""
-# Removed environment variable: "-Djava.security.egd=file:/dev/./urandom" because that's required for
-# Spring Boot versions < 2.0.
-ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -jar /app.jar" ]
+COPY --from=backend-build /currency-exchange-service/target/*.jar app.jar
+ENTRYPOINT ["sh", "-c", "java -jar /app.jar"]

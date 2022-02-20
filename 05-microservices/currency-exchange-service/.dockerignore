@@ -1,0 +1,3 @@
+# Prevent files and folders from being sent as build context
+
+target
