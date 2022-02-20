@@ -1,0 +1,5 @@
+FROM openjdk:8u322-jre
+VOLUME /tmp
+EXPOSE 8761
+COPY target/*.jar app.jar
+ENTRYPOINT [ "sh", "-c", "java -jar /app.jar" ]
