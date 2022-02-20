@@ -1,5 +1,5 @@
 # Stage 1 - compile and build source
-FROM maven:3.8.4-openjdk-8 as backend-build
+FROM maven:3.8.4-openjdk-8 AS backend-build
 WORKDIR /currency-exchange-service
 COPY pom.xml .
 RUN mvn dependency:go-offline -B
@@ -7,7 +7,8 @@ COPY src src
 RUN mvn clean install
 
 # Stage 2 - create image
-FROM openjdk:8u322-jdk
+# Use a JRE, not a JDK.
+FROM openjdk:8u322-jre
 VOLUME /tmp
 EXPOSE 8000
 COPY --from=backend-build /currency-exchange-service/target/*.jar app.jar
