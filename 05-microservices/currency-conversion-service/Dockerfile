@@ -1,6 +1,9 @@
-FROM openjdk:8-jdk-alpine
+FROM openjdk:8u322-jdk
 VOLUME /tmp
 EXPOSE 8100
-ADD target/*.jar app.jar
+COPY target/*.jar app.jar
+# Configure memory limits and CPU usage quota for the JVM. Empty string means no limit.
 ENV JAVA_OPTS=""
-ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar /app.jar" ]
+# Removed environment variable: "-Djava.security.egd=file:/dev/./urandom" because that's required for
+# Spring Boot versions < 2.0.
+ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -jar /app.jar" ]
