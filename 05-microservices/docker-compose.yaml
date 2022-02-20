@@ -1,6 +1,17 @@
 version: "3.7"
 
 services:
+  naming-server:
+    build:
+      context: netflix-eureka-naming-server
+      dockerfile: Dockerfile
+    image: gourabix/netflix-eureka-naming-server:1.1
+    ports:
+      - 8761:8761
+    restart: always
+    networks:
+      - currency-compose-network
+
   currency-exchange-service:
     build:
       context: currency-exchange-service
@@ -9,6 +20,8 @@ services:
     restart: always
     ports:
       - 8000:8000
+    depends_on:
+      - naming-server
     networks:
       - currency-compose-network
 
@@ -20,10 +33,12 @@ services:
     restart: always
     ports:
       - 8100:8100
-    environment:
-      CURRENCY_EXCHANGE_URI: http://currency-exchange-service:8000
+    # not required anymore after implementation of Netflix eureka naming server and FeignClient.
+    # environment:
+    #   CURRENCY_EXCHANGE_URI: http://currency-exchange-service:8000
     depends_on:
       - currency-exchange-service
+      - naming-server
     networks:
       - currency-compose-network
 
