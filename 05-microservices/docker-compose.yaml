@@ -1,0 +1,31 @@
+version: "3.7"
+
+services:
+  currency-exchange-service:
+    build:
+      context: currency-exchange-service
+      dockerfile: Dockerfile
+    image: gourabix/currency-exchange-service:1.1
+    restart: always
+    ports:
+      - 8000:8000
+    networks:
+      - currency-compose-network
+
+  currency-conversion-service:
+    build:
+      context: currency-conversion-service
+      dockerfile: Dockerfile
+    image: gourabix/currency-conversion-service:1.1
+    restart: always
+    ports:
+      - 8100:8100
+    environment:
+      CURRENCY_EXCHANGE_URI: http://currency-exchange-service:8000
+    depends_on:
+      - currency-exchange-service
+    networks:
+      - currency-compose-network
+
+networks:
+  currency-compose-network:
