@@ -18,8 +18,9 @@ services:
       dockerfile: Dockerfile
     image: gourabix/currency-exchange-service:1.1
     restart: always
-    ports:
-      - 8000:8000
+    # For docker-compose to dynamically scale up and down, ports must not be statically allocated.
+    # ports:
+    #   - 8000:8000
     depends_on:
       - naming-server
     networks:
