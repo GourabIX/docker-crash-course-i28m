@@ -1,6 +1,16 @@
 version: "3.7"
 
 services:
+  rabbitmq:
+    # Pull image from hub.docker.com
+    image: rabbitmq:3.8.27-management
+    ports:
+      - 5672:5672
+      - 15672:15672
+    restart: always
+    networks:
+      - currency-compose-network
+
   zuul-api-gateway:
     build:
       context: netflix-zuul-api-gateway-server
@@ -8,9 +18,30 @@ services:
     image: gourabix/netflix-zuul-api-gateway-server:1.1
     ports:
       - 8765:8765
+    environment:
+      # Default RabbitMQ username = guest, default RabbitMQ password = guest
+      RABBIT_URI: amqp://guest:guest@rabbitmq:5672
     restart: always
     depends_on:
       - naming-server
+      - rabbitmq
+      - zipkin-server
+    networks:
+      - currency-compose-network
+
+  zipkin-server:
+    image: openzipkin/zipkin:latest
+    container_name: zipkin
+    ports:
+      - 9411:9411
+    environment:
+      # mem = in-memory database. DO NOT USE IN PRODUCTION!
+      STORAGE_TYPE: mem
+      # Default RabbitMQ username = guest, default RabbitMQ password = guest
+      RABBIT_URI: amqp://guest:guest@rabbitmq:5672
+    restart: always
+    depends_on:
+      - rabbitmq
     networks:
       - currency-compose-network
 
@@ -31,11 +62,17 @@ services:
       dockerfile: Dockerfile
     image: gourabix/currency-exchange-service:1.1
     restart: always
-    # For docker-compose to dynamically scale up and down, ports must not be statically allocated.
-    # ports:
-    #   - 8000:8000
+    environment:
+      # Default RabbitMQ username = guest, default RabbitMQ password = guest
+      RABBIT_URI: amqp://guest:guest@rabbitmq:5672
+    # For docker-compose to dynamically scale up and down services, ports must not be statically
+    # allocated to those services.
+    ports:
+      - 8000:8000
     depends_on:
       - naming-server
+      - rabbitmq
+      - zipkin-server
     networks:
       - currency-compose-network
 
@@ -47,12 +84,16 @@ services:
     restart: always
     ports:
       - 8100:8100
-    # not required anymore after implementation of Netflix eureka naming server and FeignClient.
-    # environment:
-    #   CURRENCY_EXCHANGE_URI: http://currency-exchange-service:8000
+    environment:
+      # not required anymore after implementation of Netflix eureka naming server and FeignClient.
+      # CURRENCY_EXCHANGE_URI: http://currency-exchange-service:8000
+      # Default RabbitMQ username = guest, default RabbitMQ password = guest
+      RABBIT_URI: amqp://guest:guest@rabbitmq:5672
     depends_on:
       - currency-exchange-service
       - naming-server
+      - rabbitmq
+      - zipkin-server
     networks:
       - currency-compose-network
 
