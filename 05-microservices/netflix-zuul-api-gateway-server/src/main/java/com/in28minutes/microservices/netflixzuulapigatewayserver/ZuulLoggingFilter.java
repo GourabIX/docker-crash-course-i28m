@@ -16,11 +16,13 @@ public class ZuulLoggingFilter extends ZuulFilter{
 
 	@Override
 	public boolean shouldFilter() {
+		// Always execute filter
 		return true;
 	}
 
 	@Override
 	public Object run() {
+		// Defines what the filter should do on being applied to an intercepted request.
 		HttpServletRequest request = 
 				RequestContext.getCurrentContext().getRequest();
 		logger.info("request -> {} request uri -> {}", 
@@ -30,11 +32,15 @@ public class ZuulLoggingFilter extends ZuulFilter{
 
 	@Override
 	public String filterType() {
+		// pre-filter = apply filter before execution
+		// post-filter = apply filter after execution
 		return "pre";
 	}
 
 	@Override
 	public int filterOrder() {
+		// When multiple filters are present, this order determines which filter to apply first.
+		// Lower ordered filters are applied first.
 		return 1;
 	}
 }
