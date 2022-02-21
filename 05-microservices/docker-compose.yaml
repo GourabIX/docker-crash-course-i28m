@@ -1,6 +1,19 @@
 version: "3.7"
 
 services:
+  zuul-api-gateway:
+    build:
+      context: netflix-zuul-api-gateway-server
+      dockerfile: Dockerfile
+    image: gourabix/netflix-zuul-api-gateway-server:1.1
+    ports:
+      - 8765:8765
+    restart: always
+    depends_on:
+      - naming-server
+    networks:
+      - currency-compose-network
+
   naming-server:
     build:
       context: netflix-eureka-naming-server
