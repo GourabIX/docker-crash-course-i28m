@@ -1,5 +1,5 @@
 ## Stage 1 - Lets build the "deployable package"
-FROM node:7.10 as frontend-build
+FROM node:7.10 AS frontend-build
 # Here "frontend-build" is the name of the image. We refer to "this image" on line 18.
 
 WORKDIR /fullstack/frontend
