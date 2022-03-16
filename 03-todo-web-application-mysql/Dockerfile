@@ -1,5 +1,5 @@
 # Stage 1 - compile and build WAR
-FROM maven:3.8.4-openjdk-8 as backend-build
+FROM maven:3.8.4-openjdk-8 AS backend-build
 WORKDIR /todo-backend
 
 COPY pom.xml .

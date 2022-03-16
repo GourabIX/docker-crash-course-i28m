@@ -1,6 +1,6 @@
 ### Stage 1 - Lets build the "deployable package"
 
-FROM maven:3.8.4-openjdk-8 as backend-build
+FROM maven:3.8.4-openjdk-8 AS backend-build
 WORKDIR /fullstack/backend
 
 ### Step 1.1 - Copy pom.xml and download project dependencies
